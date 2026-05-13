@@ -4,7 +4,7 @@
   "main": "nuevo.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "live-server --port=3000"
+    "start": "live-server nuevo.html --port=3000"
   },
   "repository": {
     "type": "git",
