@@ -37,9 +37,9 @@ set -euo pipefail
 | Persona   | Responsable de                                                       |
 | --------- | -------------------------------------------------------------------- |
 | Lucio     | Docker, VM, infraestructura, code review                             |
-| Persona 2 | scripts/iniciar.sh + scripts/detener.sh                              |
-| Persona 3 | scripts/realizar_backup.sh + scripts/restaurar.sh                    |
-| Persona 4 | scripts/consultar_dias.sh + scripts/cambiar_password.sh + HTML + PDF |
+| Nahuel    | scripts/iniciar.sh + scripts/detener.sh                              |
+| Facu      | scripts/realizar_backup.sh + scripts/restaurar.sh                    |
+| Juane     | scripts/consultar_dias.sh + scripts/cambiar_password.sh + HTML + PDF |
 
 ## Flujo de trabajo Git
 
