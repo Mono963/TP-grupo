@@ -1,1 +1,12 @@
-node_modules
+# Backups generados localmente
+backup/*
+!backup/.gitkeep
+
+# Archivos de configuración con datos sensibles
+*.hash
+*.secret
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
