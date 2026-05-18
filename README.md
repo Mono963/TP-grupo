@@ -2,232 +2,160 @@
 
 Servidor web Apache + FTP en contenedores Docker, gestionado con scripts Bash.
 
-## Estructura
+## Estructura del repo
 
 - `scripts/` → los 6 scripts del TP
 - `webserver/` → contenido HTML que sirve Apache
 - `backup/` → backups generados (NO se sube a git)
 - `docs/` → PDF de entrega y capturas
 
-## Convenciones del proyecto (NO TOCAR sin avisar al grupo)
-
-Rutas en la VM:
-
-- WEBSERVER_DIR=/home/usuario/webserver
-- BACKUP_DIR=/home/usuario/backup
-- CONFIG_DIR=/home/usuario/.tp_config
-- PASSWORD_FILE=$CONFIG_DIR/password.hash
-- LAST_BACKUP_FILE=$CONFIG_DIR/last_backup.txt
-
-Nombres de contenedores:
-
-- docker1 = "tp_webserver" (Apache, puertos 80/443)
-- docker2 = "tp_ftpserver" (FTP, puerto 21)
-
-Formato de backup: `backup_YYYYMMDD_HHMMSS.tar.gz`
-
-Todos los scripts arrancan con:
-\`\`\`bash
-#!/usr/bin/env bash
-set -euo pipefail
-\`\`\`
-
 ## División de tareas
 
 | Persona | Responsable de                                                       |
 | ------- | -------------------------------------------------------------------- |
-| Lucio   | Docker, VM, infraestructura, code review                             |
+| Lucio   | Docker, infraestructura, code review, integración                    |
 | Nahuel  | scripts/iniciar.sh + scripts/detener.sh                              |
 | Facu    | scripts/realizar_backup.sh + scripts/restaurar.sh                    |
 | Juane   | scripts/consultar_dias.sh + scripts/cambiar_password.sh + HTML + PDF |
 
-## Flujo de trabajo Git
+## Convenciones técnicas (NO TOCAR sin avisar al grupo)
 
-1. Cada uno trabaja en su propia rama: `git checkout -b feat/mi-script`
-2. Al terminar, sube su rama y abre un Pull Request en GitHub
-3. Lucio revisa y mergea a `main`
-4. Nadie commitea directo a `main`
+Rutas del proyecto:
 
-## Setup del entorno (todos los integrantes)
+- `TP_ROOT="$HOME/TP-grupo"`
+- `WEBSERVER_DIR="$TP_ROOT/webserver"`
+- `BACKUP_DIR="$TP_ROOT/backup"`
+- `CONFIG_DIR="$HOME/.tp_config"`
+- `PASSWORD_FILE="$CONFIG_DIR/password.hash"`
+- `LAST_BACKUP_FILE="$CONFIG_DIR/last_backup.txt"`
 
-Requisitos:
+Nombres de contenedores Docker:
 
-1. Windows: instalar WSL2 con Ubuntu (`wsl --install -d Ubuntu` en PowerShell admin).
-2. Instalar Docker Desktop y activar la integración con WSL2 (Settings → Resources → WSL Integration → activar Ubuntu).
-3. Instalar VS Code + extensión "WSL" de Microsoft.
-4. Instalar FileZilla (cliente FTP gráfico): https://filezilla-project.org/
+- docker1 → `tp_webserver` (Apache, puertos 80/443)
+- docker2 → `tp_ftpserver` (FTP, puerto 21)
 
-Flujo de trabajo:
+Formato de backup: `backup_YYYYMMDD_HHMMSS.tar.gz`
 
-1. Abrir terminal Ubuntu → ir a la carpeta del repo → ejecutar `code .`
-2. Eso abre VS Code conectado a WSL.
-3. Trabajar siempre desde la terminal integrada de VS Code (`Ctrl + ñ`).
-4. Si en la terminal el prompt empieza con `tuNumbre@...` o `usuario@...`, estás en Linux ✅.
+Todos los scripts arrancan con:
 
-Verificar que Docker funciona en tu WSL:
-\`\`\`bash
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+```
+
+Códigos de salida estándar:
+
+- 0 = todo OK
+- 1 = error genérico
+- 2 = argumentos inválidos
+- 3 = password incorrecta
+
+## Setup del entorno (todos los integrantes lo hacen una vez)
+
+### Requisitos a instalar
+
+1. **WSL2 con Ubuntu** (solo Windows): abrir PowerShell como administrador y correr `wsl --install -d Ubuntu`. Reiniciar. Crear usuario y contraseña.
+2. **Docker Desktop**: descargar de https://www.docker.com/products/docker-desktop/. Después de instalarlo: Settings → Resources → WSL Integration → activar Ubuntu → Apply & Restart.
+3. **VS Code**: https://code.visualstudio.com/
+4. **Extensión "WSL"** de Microsoft en VS Code (Ctrl+Shift+X → buscar "WSL" → Install).
+5. **FileZilla** (cliente FTP): https://filezilla-project.org/
+
+### Cómo abrir el proyecto
+
+Siempre se trabaja desde la terminal de Ubuntu, no desde PowerShell:
+
+```bash
+# 1. Abrir Ubuntu desde el menú inicio (o escribir "wsl" en cualquier terminal)
+# 2. Ir a la carpeta del repo
+cd ~/TP-grupo
+
+# 3. Abrir VS Code conectado a WSL
+code .
+```
+
+Dentro de VS Code:
+
+- Abrir terminal integrada: `Ctrl + ñ` (o View → Terminal).
+- Verificar que el prompt empieza con `tuNombre@...$` (eso confirma que estás en Linux).
+- **NO usar nano ni vim** para editar scripts. Crear/editar los archivos directamente en VS Code (con syntax highlighting de Bash).
+
+### Verificar que Docker funciona en tu WSL
+
+```bash
 docker --version
 docker ps
-\`\`\`
+```
 
-# 📌 Flujo de trabajo con Git y GitHub
-
-## ⚠️ IMPORTANTE
-
-- NO trabajar directamente sobre `main`
-- NO hacer push directo a `main`
-- Todas las modificaciones deben hacerse mediante Pull Requests
-
----
-
-# 🌳 Flujo de trabajo
-
-## 1) Actualizar el repositorio
-
-Antes de empezar:
+### Setup del sistema de password (una vez)
 
 ```bash
+mkdir -p ~/.tp_config
+chmod 700 ~/.tp_config
+echo -n "tp2026admin" | sha256sum | cut -d' ' -f1 > ~/.tp_config/password.hash
+chmod 600 ~/.tp_config/password.hash
+```
+
+Password inicial del TP: `tp2026admin` (se puede cambiar con `cambiar_password.sh`).
+
+## Template de script
+
+Todos los scripts del TP deben basarse en `scripts/_template.sh`. Este template:
+
+- Define las constantes globales (rutas, nombres de contenedores, códigos de salida).
+- Provee funciones helper: `log_info`, `log_success`, `log_error`, `confirm`, `validar_password`.
+- Aplica el modo estricto de Bash (`set -euo pipefail`).
+
+### Cómo usarlo
+
+```bash
+# 1. Copiar el template con el nombre de tu script
+cp scripts/_template.sh scripts/mi_script.sh
+
+# 2. Editar el header (descripción y autor) y la función main()
+
+# 3. Darle permiso de ejecución
+chmod +x scripts/mi_script.sh
+
+# 4. Probarlo
+./scripts/mi_script.sh
+```
+
+NO modificar las funciones helper ni las constantes del template sin avisar al grupo.
+
+## Flujo de trabajo con Git
+
+**Reglas:**
+
+- NO trabajar directamente sobre `main`.
+- NO hacer push directo a `main`.
+- Todas las modificaciones se hacen mediante Pull Requests.
+- Solo Lucio mergea a `main`.
+
+### Pasos para cada feature
+
+```bash
+# 1. Antes de empezar, traer lo último
 git checkout main
 git pull origin main
-```
 
----
+# 2. Crear rama propia
+git checkout -b feat/nombre-script
+# Ejemplos: feat/iniciar, feat/backup, feat/cambiar-password
 
-## 2) Crear una nueva rama
-
-Crear SIEMPRE una rama nueva para cada funcionalidad o fix.
-
-### Ejemplos:
-
-```bash
-git checkout -b feature/login
-```
-
-```bash
-git checkout -b feature/navbar
-```
-
-```bash
-git checkout -b fix/error-auth
-```
-
----
-
-## 3) Trabajar normalmente
-
-Agregar cambios:
-
-```bash
+# 3. Trabajar, commitear normalmente
 git add .
+git commit -m "feat: descripción del cambio"
+
+# 4. Subir la rama
+git push origin feat/nombre-script
+
+# 5. Abrir Pull Request en GitHub apuntando a main
+# 6. Esperar revisión de Lucio
 ```
 
-Hacer commit:
+### Convención de commits
 
-```bash
-git commit -m "feat: se agregó login"
-```
-
----
-
-## 4) Subir la rama
-
-```bash
-git push origin nombre-rama
-```
-
-Ejemplo:
-
-```bash
-git push origin feature/login
-```
-
----
-
-## 5) Crear Pull Request
-
-1. Ir al repositorio en GitHub
-2. Abrir un Pull Request hacia `main`
-3. Esperar revisión y aprobación
-
----
-
-# 🚫 NO HACER
-
-## ❌ Nunca trabajar directamente en `main`
-
-NO usar:
-
-```bash
-git checkout main
-```
-
-para desarrollar funcionalidades.
-
----
-
-## ❌ Nunca hacer push directo a main
-
-NO usar:
-
-```bash
-git push origin main
-```
-
----
-
-# ✅ Naming recomendado para ramas
-
-## Features
-
-```txt
-feature/login
-feature/dashboard
-feature/perfil
-```
-
-## Fixes
-
-```txt
-fix/navbar
-fix/error-auth
-```
-
-## Refactors
-
-```txt
-refactor/user-service
-```
-
----
-
-# 📌 Convención de commits
-
-## Features
-
-```bash
-git commit -m "feat: se agregó login"
-```
-
-## Fixes
-
-```bash
-git commit -m "fix: se corrigió error de autenticación"
-```
-
-## Refactor
-
-```bash
-git commit -m "refactor: se mejoró user service"
-```
-
----
-
-# 🔒 Protección de rama
-
-La rama `main` está protegida.
-
-Todos los cambios deben:
-
-- pasar por Pull Request
-- ser revisados
-- ser aprobados antes de mergearse
+- `feat: ...` para nuevas funcionalidades
+- `fix: ...` para correcciones de bugs
+- `docs: ...` para cambios solo de documentación
+- `refactor: ...` para mejoras de código sin cambiar funcionalidad
