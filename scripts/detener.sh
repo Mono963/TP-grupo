@@ -54,6 +54,7 @@ fi
 
 ARGUMENTO="${1,,}"
 
+# Validación de argumentos válidos y ejecución
 case "${ARGUMENTO}" in
     "docker1")
         remover_contenedor "$CONTAINER_WEB"
