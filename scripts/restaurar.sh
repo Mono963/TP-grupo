@@ -48,7 +48,6 @@ main() {
         log_error "No se encontró $LAST_BACKUP_FILE. No hay backups previos."
         exit $EXIT_ERROR
     fi
-)
     local backup_path
     backup_path=$(sed -n '2p' "$LAST_BACKUP_FILE")
 

@@ -50,7 +50,6 @@ main() {
         log_error "Las contraseñas no coinciden. No se realizaron cambios."
         exit $EXIT_ERROR
     fi
-lo
     local nuevo_hash
     nuevo_hash=$(echo -n "$pass1" | sha256sum | cut -d' ' -f1)
     echo "$nuevo_hash" > "$PASSWORD_FILE"
