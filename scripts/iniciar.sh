@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-#Constantes de los nombres de los contenedores
 CONTAINER_WEB="tp_webserver"
 CONTAINER_FTP="tp_ftpserver"
 
-#Funciones de Ayuda Visual (Loggeo)
 log_info() {
     echo -e "[INFO] $1"
 }
@@ -18,7 +16,6 @@ log_error() {
     echo -e "[ERROR] $1" >&2
 }
 
-# Función para mostrar la ayuda del script
 mostrar_ayuda() {
     echo "Uso: $0 [docker1 | docker2 | todos]"
     echo "Ejemplos:"
@@ -27,7 +24,6 @@ mostrar_ayuda() {
     echo "  $0 todos    -> Inicia ambos servidores"
 }
 
-# Función que maneja la lógica de levantar un contenedor
 levantar_contenedor() {
     local nombre_contenedor=$1
     local comando_run=$2
@@ -54,23 +50,19 @@ levantar_contenedor() {
     fi
 }
 
-# 3. Validación: Si no recibe argumentos
 if [ $# -eq 0 ]; then
     log_error "Faltan argumentos."
     mostrar_ayuda
     exit 2
 fi
 
-# 4. Convertir el primer argumento a minúsculas
 ARGUMENTO="${1,,}"
 
-# Definición de los comandos docker run completos
 RUN_WEB="docker run -d --name $CONTAINER_WEB -p 80:80 -p 443:443 -v \$HOME/TP-grupo/webserver:/usr/local/apache2/htdocs/ httpd:2.4-alpine"
 RUN_FTP="docker run -d --name $CONTAINER_FTP -p 21:21 -p 30000-30009:30000-30009 -e PUBLICHOST=localhost -e FTP_USER_NAME=tpuser -e FTP_USER_PASS=tppass2025 -e FTP_USER_HOME=/home/tpuser -v \$HOME/TP-grupo/webserver:/home/tpuser stilliard/pure-ftpd"
 
-# 5. Validación de argumentos válidos y ejecución
 case "${ARGUMENTO}" in
-    "docker1")
+    "docker1")S
         levantar_contenedor "$CONTAINER_WEB" "$RUN_WEB"
         ;;
     "docker2")
