@@ -1,16 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>TP Bash + Docker</title>
-  <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
-    h1 { color: #2563eb; }
-  </style>
-</head>
-<body>
-  <h1>Servidor Apache funcionando</h1>
-  <p>TP Integrador — Bash + Docker</p>
-  <p>Integrantes: Lucio, Nahuel, Facu, Juane</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TP Integrador — Bash + Docker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 48px 40px;
+        max-width: 560px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      .badge {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 999px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 12px;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #94a3b8;
+        margin-bottom: 32px;
+        line-height: 1.5;
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 32px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #22c55e;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      .status span {
+        font-size: 14px;
+        color: #86efac;
+        font-weight: 500;
+      }
+
+      .stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 32px;
+      }
+
+      .tag {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+        color: #cbd5e1;
+      }
+
+      .team {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 24px;
+      }
+
+      .team h2 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        margin-bottom: 14px;
+      }
+
+      .members {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .member {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #e2e8f0;
+      }
+
+      .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <span class="badge">Trabajo Práctico Integrador</span>
+      <h1>Gestión de Servidor Web con Bash y Docker</h1>
+      <p class="subtitle">
+        Servidor Apache y servidor FTP en contenedores Docker, administrados
+        mediante scripts Bash sobre Linux.
+      </p>
+
+      <div class="status">
+        <div class="dot"></div>
+        <span>Servidor Apache funcionando correctamente</span>
+      </div>
+
+      <div class="stack">
+        <span class="tag">Apache</span>
+        <span class="tag">FTP (Pure-FTPd)</span>
+        <span class="tag">Docker</span>
+        <span class="tag">Bash</span>
+        <span class="tag">Linux</span>
+      </div>
+
+      <div class="team">
+        <h2>Integrantes</h2>
+        <div class="members">
+          <div class="member">
+            <div class="avatar">L</div>
+            Lucio
+          </div>
+          <div class="member">
+            <div class="avatar">N</div>
+            Nahuel
+          </div>
+          <div class="member">
+            <div class="avatar">F</div>
+            Facu
+          </div>
+          <div class="member">
+            <div class="avatar">J</div>
+            Juane
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

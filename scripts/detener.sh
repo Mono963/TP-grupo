@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-# Constantes de los nombres de los contenedores
 CONTAINER_WEB="tp_webserver"
 CONTAINER_FTP="tp_ftpserver"
 
@@ -54,7 +52,6 @@ fi
 
 ARGUMENTO="${1,,}"
 
-# Validación de argumentos válidos y ejecución
 case "${ARGUMENTO}" in
     "docker1")
         remover_contenedor "$CONTAINER_WEB"
